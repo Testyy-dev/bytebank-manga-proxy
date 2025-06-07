@@ -1,18 +1,14 @@
 {
-  "name": "bytebank-manga-proxy",
+  "name": "manga-proxy",
   "version": "1.0.0",
-  "main": "api/proxy.js",
+  "main": "proxy.js",
   "scripts": {
-    "start": "node api/proxy.js",
-    "dev": "nodemon api/proxy.js"
+    "start": "node proxy.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "puppeteer": "^24.10.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.10.1",
+    "puppeteer": "^20.0.0"
   }
 }

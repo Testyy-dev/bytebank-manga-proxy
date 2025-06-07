@@ -30,6 +30,7 @@ app.get('/', async (req, res) => {
   try {
     console.log(`Fetching URL: ${url}, type: ${type}`);
     console.log('Puppeteer cache dir:', process.env.PUPPETEER_CACHE_DIR || '/tmp/puppeteer');
+
     browser = await puppeteer.launch({
       args: [
         '--no-sandbox',
@@ -40,10 +41,11 @@ app.get('/', async (req, res) => {
         '--disable-features=site-per-process',
       ],
       headless: 'new',
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome',
+      // Removed executablePath to let puppeteer use bundled Chromium
       userDataDir: '/tmp/puppeteer_user_data',
       timeout: 60000,
     });
+
     console.log('Browser launched');
     const page = await browser.newPage();
 
@@ -68,19 +70,10 @@ app.get('/', async (req, res) => {
 
     const debugDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || '/tmp/debug';
     await fs.mkdir(debugDir, { recursive: true });
-    if (type === 'chapters') {
-      const html = await page.content();
-      await fs.writeFile(path.join(debugDir, 'debug_chapters.html'), html);
-      console.log(`Saved HTML to ${debugDir}/debug_chapters.html`);
-    } else if (type === 'images') {
-      const html = await page.content();
-      await fs.writeFile(path.join(debugDir, 'debug_images.html'), html);
-      console.log(`Saved HTML to ${debugDir}/debug_images.html`);
-    } else if (type === 'manga') {
-      const html = await page.content();
-      await fs.writeFile(path.join(debugDir, 'debug_manga.html'), html);
-      console.log(`Saved HTML to ${debugDir}/debug_manga.html`);
-    }
+
+    const html = await page.content();
+    await fs.writeFile(path.join(debugDir, `debug_${type}.html`), html);
+    console.log(`Saved HTML to ${debugDir}/debug_${type}.html`);
 
     let results = [];
     if (type === 'manga') {
@@ -88,7 +81,6 @@ app.get('/', async (req, res) => {
       await page.waitForSelector('a[href*="/manga/"]', { timeout: 30000 });
       results = await page.evaluate(() => {
         const elements = document.querySelectorAll('a[href*="/manga/"]');
-        console.log(`Found ${elements.length} manga elements`);
         const seenUrls = new Set();
         return Array.from(elements)
           .map(el => {
@@ -121,7 +113,6 @@ app.get('/', async (req, res) => {
       await page.waitForSelector('a[href*="/chapters/"]', { timeout: 60000 });
       results = await page.evaluate(() => {
         const elements = document.querySelectorAll('a[href*="/chapters/"]');
-        console.log(`Found ${elements.length} chapter elements`);
         const seenUrls = new Set();
         return Array.from(elements)
           .map(el => {
@@ -145,7 +136,6 @@ app.get('/', async (req, res) => {
       await page.waitForSelector('img[src*="/file/mangap/"], img[data-src*="/file/mangap/"]', { timeout: 60000 });
       results = await page.evaluate(() => {
         const elements = document.querySelectorAll('img[src*="/file/mangap/"], img[data-src*="/file/mangap/"]');
-        console.log(`Found ${elements.length} image elements`);
         return Array.from(elements)
           .map(img => img.src || img.getAttribute('data-src'))
           .filter(src => src && src.includes('/file/mangap/'));
@@ -154,6 +144,7 @@ app.get('/', async (req, res) => {
 
     console.log(`Returning ${results.length} results`);
     await browser.close();
+
     if (results.length === 0) {
       return res.status(404).json({ error: `No ${type} found` });
     }
@@ -168,6 +159,9 @@ app.get('/', async (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
+
+// Debug print to verify PORT env var
+console.log('PORT env var:', process.env.PORT);
 
 const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => console.log(`Server running on port ${port}`));
