@@ -1,7 +1,10 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs').promises;
 const path = require('path');
+
+puppeteer.use(StealthPlugin());
 
 const app = express();
 app.use(express.json());
@@ -16,7 +19,10 @@ const userAgents = [
 
 app.get('/', async (req, res) => {
   const { url, type = 'manga' } = req.query;
-  if (!url) return res.status(400).json({ error: 'Missing URL' });
+  if (!url) {
+    console.error('Missing URL');
+    return res.status(400).json({ error: 'Missing URL' });
+  }
 
   const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
   let browser = null;
@@ -31,10 +37,12 @@ app.get('/', async (req, res) => {
         '--disable-dev-shm-usage',
         '--disable-gpu',
         '--single-process',
+        '--disable-features=site-per-process',
       ],
       headless: 'new',
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome',
       userDataDir: '/tmp/puppeteer_user_data',
+      timeout: 60000,
     });
     console.log('Browser launched');
     const page = await browser.newPage();
@@ -50,7 +58,7 @@ app.get('/', async (req, res) => {
     });
 
     console.log('Navigating to URL');
-    const response = await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+    const response = await page.goto(url, { waitUntil: 'networkidle2', timeout: 90000 });
     if (!response || response.status() >= 400) {
       console.log(`Failed response: ${response?.status()}`);
       throw new Error(`Request failed with status ${response?.status()}`);
@@ -155,6 +163,10 @@ app.get('/', async (req, res) => {
     if (browser) await browser.close();
     res.status(500).json({ error: 'Failed to fetch data', details: error.message });
   }
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 const port = process.env.PORT || 3000;

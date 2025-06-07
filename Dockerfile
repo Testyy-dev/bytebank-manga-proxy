@@ -3,16 +3,19 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y \
     libasound2 \
     libatk1.0-0 \
+    libatk-bridge2.0-0 \
     libcairo2 \
     libcups2 \
     libdbus-1-3 \
     libexpat1 \
     libfontconfig1 \
+    libgbm1 \
     libgconf-2-4 \
     libgdk-pixbuf2.0-0 \
     libglib2.0-0 \
     libgtk-3-0 \
     libnspr4 \
+    libnss3 \
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
     libstdc++6 \
@@ -32,7 +35,6 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
     libappindicator3-1 \
-    libnss3 \
     lsb-release \
     xdg-utils \
     wget \
