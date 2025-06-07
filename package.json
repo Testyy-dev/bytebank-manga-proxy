@@ -1,14 +1,13 @@
 {
-  "name": "manga-proxy",
-  "version": "1.0.0",
-  "main": "proxy.js",
-  "scripts": {
-    "start": "node proxy.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-stealth": "^2.10.1",
-    "puppeteer": "^20.0.0"
-  }
-}
+       "name": "manga-proxy",
+       "version": "1.0.0",
+       "main": "proxy.js",
+       "scripts": {
+         "start": "node proxy.js"
+       },
+       "dependencies": {
+         "express": "^4.18.2",
+         "puppeteer-extra": "^3.3.6",
+         "puppeteer-extra-plugin-stealth": "^2.11.2"
+       }
+     }
