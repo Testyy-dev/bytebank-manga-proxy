@@ -6,8 +6,8 @@
     "start": "node api/proxy.js"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^123.0.0",
     "express": "^4.18.2",
-    "puppeteer": "^22.6.0",
-    "@sparticuz/chromium": "^123.0.0"
+    "puppeteer": "^22.8.2"
   }
 }
