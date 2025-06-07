@@ -1,12 +1,16 @@
 {
   "name": "bytebank-manga-proxy",
   "version": "1.0.0",
-  "type": "module",
+  "main": "api/proxy.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/proxy.js",
+    "dev": "nodemon api/proxy.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "^22.15.0"
+    "puppeteer": "^24.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
