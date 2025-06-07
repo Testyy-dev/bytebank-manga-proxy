@@ -1,14 +1,15 @@
 FROM ghcr.io/puppeteer/puppeteer:latest
 
-     ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+WORKDIR /app
 
-     WORKDIR /app
+COPY package*.json ./
 
-     COPY package*.json ./
-     RUN npm install
+USER root
+RUN npm install
+USER puppeteer
 
-     COPY . .
+COPY . .
 
-     EXPOSE 3000
+EXPOSE 3000
 
-     CMD ["node", "proxy.js"]
+CMD ["node", "proxy.js"]

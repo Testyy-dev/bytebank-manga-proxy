@@ -1,0 +1,25 @@
+﻿
+
+StatusCode        : 200
+StatusDescription : OK
+Content           : [{"title":"Tyrant of the Tower Defense 
+                    Game","url":"https://mangapill.com/manga/8753/tyrant-of-the-tower-defense-game"},{"title":"The 
+                    Tyrant of the Apocalypse Returns","url":"https://mangapill.com/man...
+RawContent        : HTTP/1.1 200 OK
+                    Connection: keep-alive
+                    Keep-Alive: timeout=5
+                    Content-Length: 1889
+                    Content-Type: application/json; charset=utf-8
+                    Date: Sat, 07 Jun 2025 22:18:54 GMT
+                    ETag: W/"761-ai/G5dmma7VrBaOOe...
+Forms             : {}
+Headers           : {[Connection, keep-alive], [Keep-Alive, timeout=5], [Content-Length, 1889], [Content-Type, 
+                    application/json; charset=utf-8]...}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : mshtml.HTMLDocumentClass
+RawContentLength  : 1889
+
+
+
