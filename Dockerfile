@@ -2,14 +2,16 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package files as root, then fix permissions
+COPY --chown=puppeteer:puppeteer package*.json ./
 
-USER root
-RUN npm install
+# Run npm install as puppeteer user to avoid EACCES
 USER puppeteer
+RUN npm install --no-audit --no-fund
 
-COPY . .
+# Copy remaining files with correct ownership
+COPY --chown=puppeteer:puppeteer . .
 
 EXPOSE 3000
 
-CMD ["node", "proxy.js"]
+CMD ["node", "api/proxy.js"]
