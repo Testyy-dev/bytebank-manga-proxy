@@ -1,17 +1,17 @@
+# Use a base image with Chromium already installed
 FROM ghcr.io/puppeteer/puppeteer:latest
 
+# Set the working directory
 WORKDIR /app
 
-# Copy package files as root, then fix permissions
-COPY --chown=puppeteer:puppeteer package*.json ./
+# Copy all files to the container
+COPY . .
 
-# Run npm install as puppeteer user to avoid EACCES
-USER puppeteer
-RUN npm install --no-audit --no-fund
+# Install dependencies
+RUN npm install
 
-# Copy remaining files with correct ownership
-COPY --chown=puppeteer:puppeteer . .
-
+# Expose port
 EXPOSE 3000
 
-CMD ["node", "api/proxy.js"]
+# Run your app
+CMD ["npm", "start"]
